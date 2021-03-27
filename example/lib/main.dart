@@ -351,15 +351,31 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           ],
         ),
         const SizedBox(height: 8.0),
-        RaisedButton(
-          child: Text(
-              'Set day ${dateTime.day}-${dateTime.month}-${dateTime.year}'),
-          onPressed: () {
-            _calendarController.setSelectedDay(
-              DateTime(dateTime.year, dateTime.month, dateTime.day),
-              runCallback: true,
-            );
-          },
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            RaisedButton(
+              child: Text(
+                  'Set day ${dateTime.day}-${dateTime.month}-${dateTime.year}'),
+              onPressed: () {
+                _calendarController.setSelectedDay(
+                  DateTime(dateTime.year, dateTime.month, dateTime.day),
+                  runCallback: true,
+                );
+              },
+            ),
+            RaisedButton(
+              child: Text(
+                  '${(_calendarController.hideWeekends) ? 'Show' : 'Hide'} Weekends'),
+              onPressed: () {
+                setState(() {
+                  _calendarController
+                      .setWeekendsHidden(!_calendarController.hideWeekends);
+                });
+              },
+            ),
+          ],
         ),
       ],
     );

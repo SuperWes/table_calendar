@@ -551,7 +551,10 @@ class _TableCalendarState extends State<TableCalendar>
   }
 
   Widget _buildTable() {
-    final daysInWeek = 7;
+    final daysInWeek = widget.calendarController._hideWeekends
+        ? 7 - widget.weekendDays.length
+        : 7;
+
     final children = <TableRow>[
       if (widget.calendarStyle.renderDaysOfWeek) _buildDaysOfWeek(),
     ];
@@ -562,7 +565,11 @@ class _TableCalendarState extends State<TableCalendar>
           .skip(x)
           .take(daysInWeek)
           .toList()));
+
       x += daysInWeek;
+      if (widget.calendarController._hideWeekends) {
+        x += widget.weekendDays.length;
+      }
     }
 
     return Table(
@@ -583,6 +590,9 @@ class _TableCalendarState extends State<TableCalendar>
         final isWeekend =
             widget.calendarController._isWeekend(date, widget.weekendDays);
 
+        if (isWeekend && widget.calendarController._hideWeekends) {
+          return null;
+        }
         if (isWeekend && widget.builders.dowWeekendBuilder != null) {
           return widget.builders.dowWeekendBuilder(context, weekdayString);
         }
@@ -597,7 +607,8 @@ class _TableCalendarState extends State<TableCalendar>
                 : widget.daysOfWeekStyle.weekdayStyle,
           ),
         );
-      }).toList(),
+      }).toList()
+            ..removeWhere((element) => element == null),
     );
   }
 

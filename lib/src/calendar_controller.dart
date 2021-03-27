@@ -78,6 +78,10 @@ class CalendarController {
     );
   }
 
+  /// Returns whether weekends are hidden
+  bool get hideWeekends => _hideWeekends ?? false;
+
+  bool _hideWeekends;
   Map<DateTime, List> _events;
   Map<DateTime, List> _holidays;
   DateTime _focusedDay;
@@ -106,6 +110,7 @@ class CalendarController {
     @required OnVisibleDaysChanged onVisibleDaysChanged,
     @required OnCalendarCreated onCalendarCreated,
     @required bool includeInvisibleDays,
+    @required bool hideWeekends,
   }) {
     _events = events;
     _holidays = holidays;
@@ -114,6 +119,7 @@ class CalendarController {
     _useNextCalendarFormat = useNextCalendarFormat;
     _selectedDayCallback = selectedDayCallback;
     _includeInvisibleDays = includeInvisibleDays;
+    _hideWeekends = hideWeekends ?? false;
 
     _pageId = 0;
     _dx = 0;
@@ -492,5 +498,9 @@ class CalendarController {
     } else {
       return value;
     }
+  }
+
+  void setWeekendsHidden(bool areWeekendsHidden) {
+    _hideWeekends = areWeekendsHidden;
   }
 }
