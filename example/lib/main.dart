@@ -45,6 +45,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   List _selectedEvents;
   AnimationController _animationController;
   CalendarController _calendarController;
+  bool hideWeekends = false;
 
   @override
   void initState() {
@@ -186,6 +187,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       onDaySelected: _onDaySelected,
       onVisibleDaysChanged: _onVisibleDaysChanged,
       onCalendarCreated: _onCalendarCreated,
+      hideWeekends: hideWeekends,
     );
   }
 
@@ -278,6 +280,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       },
       onVisibleDaysChanged: _onVisibleDaysChanged,
       onCalendarCreated: _onCalendarCreated,
+      hideWeekends: hideWeekends,
     );
   }
 
@@ -366,12 +369,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               },
             ),
             RaisedButton(
-              child: Text(
-                  '${(_calendarController.hideWeekends) ? 'Show' : 'Hide'} Weekends'),
+              child: Text('${(hideWeekends) ? 'Show' : 'Hide'} Weekends'),
               onPressed: () {
                 setState(() {
-                  _calendarController
-                      .setWeekendsHidden(!_calendarController.hideWeekends);
+                  hideWeekends = !hideWeekends;
                 });
               },
             ),

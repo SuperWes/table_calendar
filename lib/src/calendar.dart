@@ -171,6 +171,8 @@ class TableCalendar extends StatefulWidget {
   /// Set of Builders for `TableCalendar` to work with.
   final CalendarBuilders builders;
 
+  final bool hideWeekends;
+
   TableCalendar({
     Key key,
     @required this.calendarController,
@@ -210,6 +212,7 @@ class TableCalendar extends StatefulWidget {
     this.daysOfWeekStyle = const DaysOfWeekStyle(),
     this.headerStyle = const HeaderStyle(),
     this.builders = const CalendarBuilders(),
+    this.hideWeekends = false,
   })  : assert(calendarController != null),
         assert(availableCalendarFormats.keys.contains(initialCalendarFormat)),
         assert(availableCalendarFormats.length <= CalendarFormat.values.length),
@@ -231,6 +234,8 @@ class _TableCalendarState extends State<TableCalendar>
     super.initState();
 
     widget.calendarController._init(
+      hideWeekends: widget.hideWeekends,
+      weekendDays: widget.weekendDays,
       events: widget.events,
       holidays: widget.holidays,
       initialDay: widget.initialSelectedDay,
@@ -260,6 +265,11 @@ class _TableCalendarState extends State<TableCalendar>
     if (oldWidget.availableCalendarFormats != widget.availableCalendarFormats) {
       widget.calendarController._availableCalendarFormats =
           widget.availableCalendarFormats;
+    }
+
+    if (oldWidget.hideWeekends != widget.hideWeekends) {
+      widget.calendarController._hideWeekends = widget.hideWeekends;
+      widget.calendarController._updateVisibleDays(true);
     }
   }
 
@@ -551,9 +561,7 @@ class _TableCalendarState extends State<TableCalendar>
   }
 
   Widget _buildTable() {
-    final daysInWeek = widget.calendarController._hideWeekends
-        ? 7 - widget.weekendDays.length
-        : 7;
+    final daysInWeek = widget.hideWeekends ? 7 - widget.weekendDays.length : 7;
 
     final children = <TableRow>[
       if (widget.calendarStyle.renderDaysOfWeek) _buildDaysOfWeek(),
@@ -567,7 +575,7 @@ class _TableCalendarState extends State<TableCalendar>
           .toList()));
 
       x += daysInWeek;
-      if (widget.calendarController._hideWeekends) {
+      if (widget.hideWeekends) {
         x += widget.weekendDays.length;
       }
     }
@@ -590,7 +598,7 @@ class _TableCalendarState extends State<TableCalendar>
         final isWeekend =
             widget.calendarController._isWeekend(date, widget.weekendDays);
 
-        if (isWeekend && widget.calendarController._hideWeekends) {
+        if (isWeekend && widget.hideWeekends) {
           return null;
         }
         if (isWeekend && widget.builders.dowWeekendBuilder != null) {

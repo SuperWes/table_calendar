@@ -78,10 +78,8 @@ class CalendarController {
     );
   }
 
-  /// Returns whether weekends are hidden
-  bool get hideWeekends => _hideWeekends ?? false;
-
   bool _hideWeekends;
+  List<int> _weekendDays;
   Map<DateTime, List> _events;
   Map<DateTime, List> _holidays;
   DateTime _focusedDay;
@@ -111,6 +109,7 @@ class CalendarController {
     @required OnCalendarCreated onCalendarCreated,
     @required bool includeInvisibleDays,
     @required bool hideWeekends,
+    @required List<int> weekendDays,
   }) {
     _events = events;
     _holidays = holidays;
@@ -119,7 +118,8 @@ class CalendarController {
     _useNextCalendarFormat = useNextCalendarFormat;
     _selectedDayCallback = selectedDayCallback;
     _includeInvisibleDays = includeInvisibleDays;
-    _hideWeekends = hideWeekends ?? false;
+    _hideWeekends = hideWeekends;
+    _weekendDays = weekendDays;
 
     _pageId = 0;
     _dx = 0;
@@ -401,7 +401,16 @@ class CalendarController {
   }
 
   DateTime _firstDayOfMonth(DateTime month) {
-    return DateTime.utc(month.year, month.month, 1, 12);
+    if (_hideWeekends) {
+      int i = 1;
+      while (_weekendDays
+          .contains(DateTime.utc(month.year, month.month, i, 12).weekday)) {
+        i++;
+      }
+      return DateTime.utc(month.year, month.month, i, 12);
+    } else {
+      return DateTime.utc(month.year, month.month, 1, 12);
+    }
   }
 
   DateTime _lastDayOfMonth(DateTime month) {
@@ -498,9 +507,5 @@ class CalendarController {
     } else {
       return value;
     }
-  }
-
-  void setWeekendsHidden(bool areWeekendsHidden) {
-    _hideWeekends = areWeekendsHidden;
   }
 }
