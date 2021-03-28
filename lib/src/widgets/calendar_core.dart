@@ -23,6 +23,8 @@ class CalendarCore extends StatelessWidget {
   final double? dowHeight;
   final double? rowHeight;
   final BoxConstraints constraints;
+  final List<int> weekendDays;
+  final bool hideWeekends;
   final int? previousIndex;
   final StartingDayOfWeek startingDayOfWeek;
   final PageController? pageController;
@@ -37,6 +39,8 @@ class CalendarCore extends StatelessWidget {
     required this.firstDay,
     required this.lastDay,
     required this.constraints,
+    required this.weekendDays,
+    required this.hideWeekends,
     this.dowHeight,
     this.rowHeight,
     this.startingDayOfWeek = StartingDayOfWeek.sunday,
@@ -74,6 +78,8 @@ class CalendarCore extends StatelessWidget {
           dowVisible: dowVisible,
           dowDecoration: dowDecoration,
           rowDecoration: rowDecoration,
+          weekendDays: weekendDays,
+          hideWeekends: hideWeekends,
           dowBuilder: (context, day) {
             return SizedBox(
               height: dowHeight,

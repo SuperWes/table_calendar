@@ -60,6 +60,9 @@ class TableCalendar<T> extends StatefulWidget {
   /// Use built-in `DateTime` weekday constants (e.g. `DateTime.monday`) instead of `int` literals (e.g. `1`).
   final List<int> weekendDays;
 
+  /// Determines the visibility of weekends for week-only calendars.
+  final bool hideWeekends;
+
   /// Specifies `TableCalendar`'s current format.
   final CalendarFormat calendarFormat;
 
@@ -202,6 +205,7 @@ class TableCalendar<T> extends StatefulWidget {
     this.rangeStartDay,
     this.rangeEndDay,
     this.weekendDays = const [DateTime.saturday, DateTime.sunday],
+    this.hideWeekends = false,
     this.calendarFormat = CalendarFormat.month,
     this.availableCalendarFormats = const {
       CalendarFormat.month: 'Month',
@@ -475,6 +479,8 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
             startingDayOfWeek: widget.startingDayOfWeek,
             dowDecoration: widget.daysOfWeekStyle.decoration,
             rowDecoration: widget.calendarStyle.rowDecoration,
+            weekendDays: widget.weekendDays,
+            hideWeekends: widget.hideWeekends,
             dowVisible: widget.daysOfWeekVisible,
             dowHeight: widget.daysOfWeekHeight,
             rowHeight: widget.rowHeight,

@@ -10,6 +10,8 @@ class CalendarPage extends StatelessWidget {
   final Decoration? dowDecoration;
   final Decoration? rowDecoration;
   final bool dowVisible;
+  final bool hideWeekends;
+  final List<int> weekendDays;
 
   const CalendarPage({
     Key? key,
@@ -19,7 +21,9 @@ class CalendarPage extends StatelessWidget {
     this.dowDecoration,
     this.rowDecoration,
     this.dowVisible = true,
-  })  : assert(!dowVisible || dowBuilder != null),
+    required this.hideWeekends,
+    required this.weekendDays,
+  })   : assert(!dowVisible || dowBuilder != null),
         super(key: key);
 
   @override
@@ -33,26 +37,40 @@ class CalendarPage extends StatelessWidget {
   }
 
   TableRow _buildDaysOfWeek(BuildContext context) {
+    List<Widget> dows = [];
+    for (int i = 1; i < 7; i++) {
+      if (hideWeekends) {
+        if (!weekendDays.contains(i)) {
+          dows.add(dowBuilder!(context, visibleDays[i]));
+        }
+      } else {
+        dows.add(dowBuilder!(context, visibleDays[i]));
+      }
+    }
     return TableRow(
       decoration: dowDecoration,
-      children: List.generate(
-        7,
-        (index) => dowBuilder!(context, visibleDays[index]),
-      ).toList(),
+      children: dows,
     );
   }
 
   List<TableRow> _buildCalendarDays(BuildContext context) {
     final rowAmount = visibleDays.length ~/ 7;
 
-    return List.generate(rowAmount, (index) => index * 7)
-        .map((index) => TableRow(
-              decoration: rowDecoration,
-              children: List.generate(
-                7,
-                (id) => dayBuilder(context, visibleDays[index + id]),
-              ),
-            ))
-        .toList();
+    return List.generate(rowAmount, (index) => index * 7).map((index) {
+      List<Widget> cells = [];
+      for (int i = 1; i < 7; i++) {
+        if (hideWeekends) {
+          if (!weekendDays.contains(i)) {
+            cells.add(dayBuilder(context, visibleDays[index + i]));
+          }
+        } else {
+          cells.add(dayBuilder(context, visibleDays[index + i]));
+        }
+      }
+      return TableRow(
+        decoration: rowDecoration,
+        children: cells,
+      );
+    }).toList();
   }
 }

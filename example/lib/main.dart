@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:table_calendar_example/pages/table_no_weekends_example.dart';
 
 import 'pages/table_basics_example.dart';
 import 'pages/table_complex_example.dart';
@@ -81,6 +82,14 @@ class _StartPageState extends State<StartPage> {
               onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => TableComplexExample()),
+              ),
+            ),
+            const SizedBox(height: 12.0),
+            ElevatedButton(
+              child: Text('TableCalendar - No Weekends'),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => TableNoWeekendsExample()),
               ),
             ),
             const SizedBox(height: 20.0),

@@ -29,12 +29,16 @@ class TableCalendarBase extends StatefulWidget {
   final SwipeCallback? onVerticalSwipe;
   final void Function(DateTime focusedDay)? onPageChanged;
   final void Function(PageController pageController)? onCalendarCreated;
+  final List<int> weekendDays;
+  final bool hideWeekends;
 
   TableCalendarBase({
     Key? key,
     required this.firstDay,
     required this.lastDay,
     required this.focusedDay,
+    required this.weekendDays,
+    required this.hideWeekends,
     this.calendarFormat = CalendarFormat.month,
     this.dowBuilder,
     required this.dayBuilder,
@@ -193,6 +197,8 @@ class _TableCalendarBaseState extends State<TableCalendarBase>
               rowHeight: widget.rowHeight,
               dowDecoration: widget.dowDecoration,
               rowDecoration: widget.rowDecoration,
+              weekendDays: widget.weekendDays,
+              hideWeekends: widget.hideWeekends,
               onPageChanged: (index, focusedMonth) {
                 if (!_pageCallbackDisabled) {
                   if (!isSameDay(_focusedDay, focusedMonth)) {
